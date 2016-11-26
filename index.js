@@ -1,6 +1,7 @@
-const { GOOGLE_API, AWS_KEY, AWS_SECRET, S3_FOLDER, YT_TERM } = process.env;
+const { GOOGLE_API, AWS_KEY, AWS_SECRET, S3_BUCKET, AWS_REGION, YT_TERM } = process.env;
 
 const googleapis = require('googleapis');
+const aws = require("aws-sdk");
 const sprintf = require('sprintf-js').sprintf;
 
 const HTML_TEMPLATE = `
@@ -23,19 +24,37 @@ const VIDEO_TEMPLATE = `
   </li>`;
 
 (() => {
-  // Setup API SDK with API KEY and create YouTube object
-  let youtube = googleapis.youtube({
-    version: 'v3',
-    auth: GOOGLE_API
-  })
+  // Get the SDKs that will be used for the project
+  let { youtube, s3 } = getProjectSDK()
 
   findVideos(youtube, YT_TERM)
     .then(data => {
-      return extractVideosToHTML(videos)
+      return extractVideosToHTML(data)
     })
     .then(videosHtml => {
-      console.log(videosHtml)
+      return uploadToS3(s3, videosHtml)
     })
+    .then(msg => {
+      console.log(msg)
+    })
+    .catch(err => {
+      console.error(err)
+    })
+
+  // Create the instance for the SDKs
+  function getProjectSDK() {
+    return {
+      youtube: googleapis.youtube({
+        version: 'v3',
+        auth: GOOGLE_API
+      }),
+      s3: new aws.S3({
+        region: AWS_REGION,
+        accessKeyId: AWS_KEY,
+        secretAccessKey: AWS_SECRET
+      })
+    }
+  }
 
   // Find videos by using the YouTube SDK and a search term
   function findVideos(youtube, term) {
@@ -78,7 +97,25 @@ const VIDEO_TEMPLATE = `
     })
   }
 
-  function uploadToS3(s3SDK, videoHtml) {
+  // Uploads the video HTML to S3 Bucket
+  function uploadToS3(s3, videosHtml) {
+    let today = new Date()
+    let filename = `videos-${today.getTime()}.html`
 
+    return new Promise((resolve, reject) => {
+      s3.putObject({
+        Bucket: S3_BUCKET,
+        ACL: 'public-read',
+        ContentType: "text/html",
+        Key: filename,
+        Body: videosHtml
+      }, (err, data) => {
+        if (err) {
+          reject(`Problem during S3 upload: ${err.message}`)
+        }
+
+        resolve(`Upload finished for file ${filename}`)
+      })
+    })
   }
 })()

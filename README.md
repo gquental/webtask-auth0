@@ -1,7 +1,6 @@
 # Summary
 
-This project has the goal to test the [webtask.io](https://webtask.io) project by creating  
-a system which will do the following:  
+This project has the goal to test the [webtask.io](https://webtask.io) project by creating a system which will do the following:  
 
 1. Connect to YouTube
 2. Perform a search
@@ -23,8 +22,7 @@ In order to this project to run, you will need:
 
 ### Using the project
 
-In both versions of the project, a set of default secret params  
-are expected so the system could run. Those params are:
+In both versions of the project, a set of default secret params are expected so the system could run. Those params are:
 
 - GOOGLE_API
   - Google API KEY credential that you will get from the developer console
@@ -44,15 +42,13 @@ are expected so the system could run. Those params are:
 For this version you will notice the ```webtask.js``` file, that you need to run.
 
 
-All the parameters commented above should be passed to the  
-application as secret params, as in the example below:
+All the parameters commented above should be passed to the application as secret params, as in the example below:
 
 ```bash
 wt create --secret GOOGLE_API="SAMPLE" --secret AWS_KEY="SAMPLE" --secret AWS_SECRET="SAMPLE" --secret S3_BUCKET="SAMPLE" --secret YT_TERM="surfboards" --secret AWS_REGION="us-east-1" webtask.js
 ```
 
-After this, when you access the URL provided by the wt-cli,  
-you will notice that a new file will be created inside your S3 bucket.
+After this, when you access the URL provided by the wt-cli, you will notice that a new file will be created inside your S3 bucket.
 
 ##### Custom search
 

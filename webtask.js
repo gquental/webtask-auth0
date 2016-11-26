@@ -29,8 +29,11 @@ module.exports = (ctx, req, res) => {
 
   // Get the SDKs that will be used for the project
   let { youtube, s3 } = getProjectSDK()
+  let { search } = ctx.data
 
-  findVideos(youtube, YT_TERM)
+  search = (typeof search != "undefined" && search != "") ? search : YT_TERM
+
+  findVideos(youtube, search)
     .then(data => {
       return extractVideosToHTML(data)
     })
@@ -66,7 +69,7 @@ module.exports = (ctx, req, res) => {
     return new Promise((resolve, reject) => {
       youtube.search.list({
         part: 'id,snippet',
-        q: YT_TERM
+        q: term
       }, function(err, data) {
         if (err) {
           reject(`Problem connection with YouTube ${err.message}`)

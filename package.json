@@ -1,0 +1,11 @@
+{
+  "name": "auth0",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Guilherme Quental <guilherme@quent.al>",
+  "license": "MIT",
+  "dependencies": {
+    "aws-sdk": "^2.7.7",
+    "googleapis": "^14.2.0"
+  }
+}

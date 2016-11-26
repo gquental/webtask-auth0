@@ -62,7 +62,7 @@ const VIDEO_TEMPLATE = `
     return new Promise((resolve, reject) => {
       youtube.search.list({
         part: 'id,snippet',
-        q: YT_TERM
+        q: term
       }, function(err, data) {
         if (err) {
           reject(`Problem connection with YouTube ${err.message}`)

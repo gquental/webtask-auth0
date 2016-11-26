@@ -53,3 +53,15 @@ After this, when you access the URL provided by the wt-cli, you will notice that
 ##### Custom search
 
 You can override the custom **YT_TERM** by providing a **GET** parameter for the webtask by adding in the url ```?search=[desired search]```
+
+#### CLI version
+
+The CLI version relies in a env file in order to run. There is a ```.env-sample``` file in the project that you should rename to ```.env```.
+
+It's important to change the file with the proper content for the params.
+
+The command that you can use to run the code in CLI without adding the env vars to your system is to execute this command:
+
+```bash
+env $(cat .env | xargs) node index.js
+```

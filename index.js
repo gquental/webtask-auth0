@@ -11,6 +11,7 @@ const HTML_TEMPLATE = `
       <link rel="stylesheet" href="https://cdn.rawgit.com/twbs/bootstrap/v4-dev/dist/css/bootstrap.css">
     </head>
     <body>
+      <h1>YouTube videos from %s</h1>
       <ul class="list-group">
         %s
       </ul>
@@ -91,7 +92,8 @@ const VIDEO_TEMPLATE = `
         sprintf(
           HTML_TEMPLATE,
           today.toUTCString(),
-          videosHtml.join()
+          today.toUTCString(),
+          videosHtml.join('')
         )
       )
     })

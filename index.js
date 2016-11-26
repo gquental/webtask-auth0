@@ -16,11 +16,11 @@ const HTML_TEMPLATE = `
     </body>
   </html>`;
 const VIDEO_TEMPLATE = `
-<li class="list-group-item">
-  <iframe src="%s"></iframe>
-  <h3>%s</h3>
-  <p>%s</p>
-</li>`;
+  <li class="list-group-item">
+    <iframe src="%s"></iframe>
+    <h3>%s</h3>
+    <p>%s</p>
+  </li>`;
 
 (() => {
   // Setup API SDK with API KEY and create YouTube object
@@ -31,10 +31,7 @@ const VIDEO_TEMPLATE = `
 
   findVideos(youtube, YT_TERM)
     .then(data => {
-      return extractVideos(data)
-    })
-    .then(videos => {
-      return generateYouTubeHTML(videos)
+      return extractVideosToHTML(videos)
     })
     .then(videosHtml => {
       console.log(videosHtml)
@@ -56,28 +53,16 @@ const VIDEO_TEMPLATE = `
     })
   }
 
-  function extractVideos(data) {
-    return new Promise((resolve, reject) => {
-      resolve(data.items.map(video => {
-        return {
-          title: video.snippet.title,
-          description: video.snippet.description,
-          embed: `https://www.youtube.com/embed/${video.id.videoId}`
-        }
-      }))
-    })
-  }
-
   // Generates array with the HTML representation of each video and returns
   // a full HTML with all the videos in the body
-  function generateYouTubeHTML(videos) {
+  function extractVideosToHTML(data) {
     return new Promise((resolve, reject) => {
-      let videosHtml = videos.map(video => {
+      let videosHtml = data.items.map(video => {
         return sprintf(
           VIDEO_TEMPLATE,
-          video.embed,
-          video.title,
-          video.description
+          `https://www.youtube.com/embed/${video.id.videoId}`,
+          video.snippet.title,
+          video.snippet.description
         )
       })
       let today = new Date()
@@ -93,5 +78,7 @@ const VIDEO_TEMPLATE = `
     })
   }
 
-  function uploadToS3(s3SDK, videoHtml)
+  function uploadToS3(s3SDK, videoHtml) {
+
+  }
 })()
